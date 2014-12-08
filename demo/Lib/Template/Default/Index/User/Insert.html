@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<h3>
+    User插入
+</h3>
+<form method="post">
+    <table>
+        <tr><th>UserName:</th><td><input type="text" value="{$value[userName]}" name="data[userName]"></td></tr>
+        <tr><th>password:</th><td><input type="password" name="data[password]"></td></tr>
+        <tr><th>RealName:</th><td><input type="text" value="{$value[realName]}" name="data[realName]"></td></tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="提交"></td>
+        </tr>
+    </table>
+    <!--加入token hash，否则添加不上-->
+    {TOKEN($marking)}
+</form>
+</body>
+</html>

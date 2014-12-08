@@ -1,0 +1,37 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>目录服务</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+				目录服务提供了一系列的创建/删除/移动等操作，详情操作参阅接口
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+$directory = \Tang\Services\DirectoryService::getService();
+$directory->copy('/data/www/a/','/data/www/b/');//将a复制到b
+$directory->create('/data/www/c');//创建/data/www/c文件夹
+$directory->delete('/data/www/c');//删除目录
+...其余操作查看接口
+                </pre>
+                <h3>Tang\IO\Interfaces\IDirectory接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+              
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

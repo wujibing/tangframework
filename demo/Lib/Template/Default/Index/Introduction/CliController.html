@@ -1,0 +1,35 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>CliController</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+            CliController是Cli模式下的控制器。CliController没有视图。CliController通过CliRequest和CliResponse进行输入输出。
+            例如：
+            <pre class="prettyprint  Lang-php">
+    public function main()
+    {
+        $response = $this->request->getResponse();
+        $response->writeLine('Hi.请问您叫什么名字？');
+        $name = $this->request->readLine();
+        $response->writeLine(sprintf('哦。原来您叫:%s;请问您的性别是(1为男 2为女)：',$name));
+        $sex = $this->request->readAChar() == 1 ? '先生':'女士';
+        $response->writeLine(sprintf('欢迎您:%s%s',$name,$sex));
+    }
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>WebController</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>Tang\Web\Controllers\WebController是所有Web控制器的基类！</h4>
+		    <p>WebController继承于Controller！并包含了$view属性 $isAjax属性 $notAllowFunctions数组</p>
+	  	</div>
+		<div style="margin-top:10px;">
+
+            <h3>Ajax返回数据</h3>
+            <p>WebController的设计理念就是想表达同一个操作，既可以是网页，又可以是接口！在Ajax.conf配置文件中。requestName是Ajax请求的参数名称，callback是如果需要callback的参数名称。</p>
+            <p>假设requestName=ajaxType callback = callback 并且WebController控制中isAjax属性为true</p>
+            <p>我们访问我们的主页<a href="{Url('index/index/main')}" target="_blank">{Url('index/index/main')}</a>,我们会发现是个HTML网页。但是我们加入ajaxType参数呢。
+            	我们试试能不能返回JSON数据<a href="{Url('index/index/main','ajaxType=json')}" target="_blank">{Url('index/index/main','ajaxType=json')}</a>,跨域的时候要使用callback.我们来试下callback <a href="{Url('index/index/main','ajaxType=json&callback=frameworkCall')}" target="_blank">{Url('index/index/main','ajaxType=json&callback=frameworkCall')}</a></p>
+
+            <h3>消息提示</h3>
+            在控制器里面$this->message($message,$code=200,$jumpUrl='') 使用该方法就可以进行消息提示。$code为200代表是成功的操作，否则就是错误码，$jumpUrl为空则跳转到其他上一页。
+
+            <h3>404提示</h3>
+            在控制器里面$this->notFound($message) 即可。
+
+            <h3>获取变量</h3>
+            在控制器里面$this->get($name,default=null) 即可获取$_GET[$name]值。如果没有则返回$default。同样还可以使用post put方法获取。
+
+            <h3>禁止访问</h3>
+            因为控制器里面公开的方法都能当成是一个操作，外部能进行访问。如果我们希望某个操作外部不能访问，我们可以在$notAllowFunctions属性里面加入禁止的操作名称。
+            例如 protected $notAllowFunctions = array('insert','go');那么当访问insert和go操作的时候，都会提示404错误
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>存储服务</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <p>Storage服务暂时支持ftp sftp qiniu upyun 本地存储驱动，后续会增加几个分布式文件系统存储！</p>
+	  	</div>
+
+		<div style="margin-top:10px;">
+				
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+$storageService = \Tang\Storage\StorageService::getService();
+$content = 'Hi!TangFramework!';
+$storageService->write('abc/xx/c.txt',$content);//abc/xx/c.txt写入$content内容
+$storageService->putFile('/data/www/c.txt','abc/xx/c.txt');//将本地/data/www/c.txt传入到abc/xx/c.txt
+$storageService->getUrl('abc/xx/c.txt');//获取abc/xx/c.txt外部访问地址
+...其余操作查看接口
+                </pre>
+                <h3>配置 Storage.conf</h3>
+                <pre class="prettyprint  Lang-php">
+{
+    "defaultDriver":"local",//默认的存储引擎 支持qiniu upYun sFtp ftp
+    "qiniu":
+    {
+        "buckets":
+        {
+            "wodexx":
+            {
+                "domain":"wodexx.qiniudn.com",
+                "isPrivate":false //是否是私密空间
+                //也可在这里设置单独的accessKey和secretKey
+            }
+        },
+        "accessKey":"hy90KF_2Whk6v10APvnSAoz-Nt7KzqObPFUC3Ppq",//七牛通用的accessKey和secretKey
+        "secretKey":"3thEDg-YcR5HrXkNFxr8RkP8FI3RW88jrucw8S2e"
+    },
+    "upYun":
+    {
+        "buckets":
+        {
+            "testframework":
+            {
+                "domain":"testframework.b0.upaiyun.com"//也可在这里设置单独的user和password
+            }
+        },
+        "user":"xx",//又拍云通用的账号和密码
+        "password":"xx"
+    },
+    "sFtp":
+    {
+        "buckets":
+        {
+            "image": //用于上传图片服务器
+            {
+                "domain":"192.168.31.8",
+                "user":"root",
+                "port":22,
+                "password":"wujibing",
+                "directory":"/data/files/images",//上传的文件目录
+                "path":"/images/"//外部访问的目录
+            },
+            "file": //用于上传文件服务器
+            {
+                "domain":"192.168.31.8",
+                "user":"root",
+                "port":22,
+                "password":"wujibing",
+                "directory":"/data/files/zips",
+                "path":"/zips/" //外部访问的目录
+            }
+        }
+    },
+    "ftp":
+        {
+            "buckets":
+            {
+                "image": //用于上传图片服务器
+                {
+                    "domain":"192.168.31.8",
+                    "user":"ftp1",
+                    "port":21,
+                    "password":"abc",
+                    "directory":"/images/",//存放的目录
+                    "path":"/images/"//访问的目录 结果就是domain/images/file地址
+                },
+                "file": //用于上传文件服务器
+                {
+                    "domain":"192.168.31.8",
+                    "user":"root",
+                    "port":21,
+                    "password":"wujibing",
+                    "directory":"/file/",//存放在file目录
+                    "path":"/file/" //外部访问的目录
+                }
+            }
+    },
+    "local":
+    {
+        "buckets":
+        {
+            "image":
+            {
+                "directory":"/images/"//网站根目录 的图片目录
+            }
+        }
+    }
+}
+                </pre>
+                每个配置都可以在buckets里面添加多个bucket 上面是完整的配置
+                <h3>Tang\Storage\Drivers\IStorage 存储驱动接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode2}
+                </pre>
+                <h3>Tang\Storage\StorageManager 管理器源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

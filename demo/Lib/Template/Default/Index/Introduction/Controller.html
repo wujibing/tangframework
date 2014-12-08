@@ -1,0 +1,41 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Controller</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>Tang\Web\Controllers\Controller是所有控制器的基类！</h4>
+		    <p>Controller用于管理、创建控制器对象，并执行动作。并包含了$request、$parameters、$config、$i18n等公有属性！</p>
+	  	</div>
+		<div style="margin-top:10px;">
+
+            <h3>如何建立一个控制器</h3>
+            控制器编写很简单，在网站目录Lib\Applications\模块名称\Controllers\模式[Cli|Web]\控制器名.php <br>
+            在Cli模式下调用的控制器都位于Cli文件夹。Web模式都调用Web文件夹！<br><br>
+            为了使得框架更简单，框架使用了包。所以我们在编写控制器的时候，也需要加入包名。<br>
+            <?php<br>
+namespace Lib\Applications\模块名称\Controllers\模式[Cli|Web]; 也就是Lib的文件路径<br>
+use Tang\Web\Controllers\WebController;<br>
+<br>
+class Cookie extends WebController{<br>
+	public function sayHi()<br>
+	{<br>
+		echo 'Hi!';<br>
+	}<br>
+}  <br>
+sayHi就是动作名称，能被我们直接调用
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

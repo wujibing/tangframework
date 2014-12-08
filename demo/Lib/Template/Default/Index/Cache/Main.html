@@ -1,0 +1,120 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Cache服务</h1>
+		</div>
+
+
+   
+	  	{include DemoBtn}
+		<div style="margin-top:10px;">
+				在TangFramework中，使用Cache非常简单！<br/>
+				通过CacheService::getService()可获取Cache管理对象。可直接使用\Tang\Cache\Stores\IStore方法进行默认的缓存驱动操作。<br/>
+				如果需要使用其他的缓存驱动。可用CacheService::getService()->driver(驱动名) 得到\Tang\Cache\Stores\IStore对象<br/>
+				
+				<h3>Cache的配置</h3>
+				Cache的配置文件是Cache.conf文件，下面是默认配置。
+				<pre class="prettyprint Lang-js">
+							{
+    "directory":"cache",//文件缓存的目录 位于data目录下
+    "defaultDriver":"json",//默认的驱动  支持 database json redis memcached igbinary serialization apc 默认为json
+    "database"://数据库缓存设置
+    {
+        "source":"test" //使用的数据源
+    },
+    "redisSource":"",//redis的数据源名称 默认为cache
+    "memcachedSource":""//memcached的数据源名称 默认为cache
+}
+						</pre>
+
+				<h3>基本实例</h3>
+				<pre class="prettyprint   Lang-php">
+							  	$cache = CacheService::getService();//也可以$cache = CacheService::getService()->driver('驱动名')获取其他驱动实例;
+        $value = $cache->get('name',function($instance,$key)
+        {
+            $content = 'cache';
+            $instance->set($key,$content,86400);
+            return $content;
+        });
+        $cache->set(name,value,expire);
+						</pre>
+
+				<h3>\Tang\Cache\Stores\IStore接口源码</h3>
+				<pre class="prettyprint  Lang-php">
+namespace Tang\Cache\Stores;
+/**
+ * 缓存存储接口
+ * 开发者需要开发自己的缓存对象时，必须要实现该接口
+ * Interface IStore
+ * @package Tang\Cache\Stores
+ */
+interface IStore
+{
+    /**
+     * 根据$key获取缓存内容
+     * 如果没有缓存则调用$callback进行设置缓存
+     * $callback会接受IStore 和$key两个参数
+     * 需要$callback返回缓存值
+     * <code>
+     * //采用默认的缓存设置
+     * CacheService::getService()->get('name',function($instance,$key)
+     * {
+     *  $content = 'cache';
+     *  $instance->set($key,$content,86400);//缓存内容一天
+     *  return $content;
+     * });
+     * </code>
+     * @param $key
+     * @param callable $callback
+     * @return mixed
+     */
+    public function get($key,callable $callback = null);
+
+    /**
+     * 设置缓存值
+     * <code>
+     * CacheService::getService()->set('name','cache',86400);//缓存name一天
+     * </code>
+     * @param $key
+     * @param $value
+     * @param int $expire
+     * @return mixed
+     */
+    public function set($key,$value,$expire=0);
+
+    /**
+     * 删除$key缓存
+     * <code>
+     * CacheService::getService()->delete('name');//删除name缓存
+     * </code>
+     * @param $key
+     * @return mixed
+     */
+    public function delete($key);
+
+    /**
+     * 清空缓存
+     * <code>
+     * CacheService::getService()->clean(');
+     * </code>
+     * @return mixed
+     */
+    public function clean();
+
+					</pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

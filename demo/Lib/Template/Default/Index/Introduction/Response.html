@@ -1,0 +1,44 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Response服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Response服务用于动态响应客户端请示，控制发送给用户的信息，并将动态生成响应。</p>
+	  	</div>
+		<div style="margin-top:10px;">
+				
+            
+                <h3>Tang\Response\IResponse 接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+                Web模式下的Response比Cli模式下多几个方法<br>
+                expires($time =0) 设置过期时间<br>
+                refresh($time,$url) 在$time秒后重定向到一个新的URI资源。<br>
+                contentType($contentType='text/html') 设置contentType<br>
+                contentTypeByFileExtension($extension) 根据后缀名设置contentType<br>
+                redirect($url,$statusCode=302) 重定向到$url.并设置状态码<br>
+                httpStatus($statusCode) 设置状态码<br>
+                serverName($serverName) 设置报头的Sever信息<br>
+                poweredBy($value) 设置X-Powered-By<br>
+                noCache() 设置不缓存<br>
+                header($header) 添加报头<br>
+                writeFile($path) 输出文件内容<br>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

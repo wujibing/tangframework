@@ -1,0 +1,31 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Router服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Tang\Services\RouterService::getService()在cli环境下获取的是CliRouter，web模式下获取的是WebRouter！Router负责的是获取模块 控制器 方法函数，然后交予项目找到控制器并且运行。</p>
+	  	</div>
+		<div style="margin-top:10px;">
+				
+            
+                <h3>Tang\Routing\IRouter  接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

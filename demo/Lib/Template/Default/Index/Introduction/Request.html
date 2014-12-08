@@ -1,0 +1,39 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Request服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Tang\Services\RequestService::getService()在cli环境下获取的是CliRequester，web模式下获取的是WebRequester！框架里面的控制器都包含了Tang\Request\IRequest 接口对象。可通过控制器中request属性获取</p>
+	  	</div>
+		<div style="margin-top:10px;">
+				
+            
+                <h3>Tang\Request\IRequest 接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+                Web模式下的Requester比Cli模式下多几个方法<br>
+                getHttpMethod()获取客户端使用的 HTTP 数据传输方法（如 get、post 或 head）<br>
+                clientIp() 获取客户端IP信息 返回\Tang\Web\Ip\IClientIp接口对象<br>
+                cookie() 获取\Tang\Web\Cookie\ICookie接口对象<br>
+                session() 获取\Tang\Web\Session\ISession接口对象<br>
+                browser() 获取浏览器信息 返回\Tang\Web\Browser\IBrowser接口对象<br>
+                getUrlReferrer() 获取HTTP_REFERER
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

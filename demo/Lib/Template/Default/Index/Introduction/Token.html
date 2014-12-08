@@ -1,0 +1,39 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>令牌服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Token服务的结果取决于Crypt服务默认驱动的加密结果！</p>
+	  	</div>
+		<div style="margin-top:10px;">
+				
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+$token = \Tang\Token\TokenService::getService();
+$token->getInput('token',1000);//生产input控件的验证，并且只持续1000秒 。<input type="hidden" value="加密结果" name="name">
+$token->validate('token');//验证token令牌是否有效
+$token->make('token',1000);生产token令牌值，有效期为1000秒
+...其余操作查看接口
+                </pre>
+                <h3>Tang\ThirdParty\IThirdParty 接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

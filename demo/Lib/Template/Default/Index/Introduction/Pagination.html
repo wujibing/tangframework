@@ -1,0 +1,36 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>分页服务</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+				
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+$paginationService = \Tang\Pagination\PaginationService::getService();
+$paginationService->getPages(3,200,10);//获取分页结果
+$paginationService->getNowPage();//获取现在的页码
+$paginationService->getMaxPage();//获取最大页数
+...其余操作查看接口
+                </pre>
+                <h3>Tang\Pagination\IPaginator 管理器接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

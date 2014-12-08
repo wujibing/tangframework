@@ -1,0 +1,52 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>加密服务</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>Crypt管理器！</h4>
+		    <p>提供了aes、blowFish、loki97、thirdDes(3des)、twoFish、xTea、gost加密驱动。默认的驱动为aes。开发者可在配置文件配置加密默认驱动，方法和Cache配置一样</p>
+	  	</div>
+		
+	  	{include DemoBtn}
+		<div style="margin-top:10px;">
+				<br/>
+				通过Tang\Crypt\CryptService服务可获取CryptManager,然后使用该对象进行加密解密操作<br/>
+				
+				<h3>Crypt的配置</h3>
+				Crypt的配置文件是Crypt.conf文件，下面是默认配置。
+				<pre class="prettyprint Lang-js">
+							{
+    "defaultDriver":"aes", //aes为默认的驱动  支持aes blowFish loki97 thirdDes(3des) twoFish xTea gost加密方式
+    "key":"123wcef", //密钥 当密钥和iv位数超过或不足的时候，框架会进行补位，具体查阅框架源码。
+    "iv":"dsdss" //向量
+}
+						</pre>
+
+				<h3>基本实例</h3>
+				<pre class="prettyprint   Lang-php">
+							$driver = CryptService::getService();
+$driver->encode('xx')
+$driver->decode('xx加密结果');
+						</pre>
+
+				<h3>\Tang\Crypt\Drivers\ICryptDriver接口源码</h3>
+				<pre class="prettyprint  Lang-php">
+{$interfaceSourceCode}
+					</pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

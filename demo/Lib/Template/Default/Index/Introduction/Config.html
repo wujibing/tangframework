@@ -1,0 +1,44 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Config服务</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>Config服务是一个特殊的服务！</h4>
+		    <p>他不继承ServiceProvider类和依赖配置文件！如果要使用自己的配置类时候，我们只要添加一个新类，实现Tang\Config\IConfig接口，在载入框架TangApplication.php后马上使用ConfigService::setConfigClass(配置类地址);即可</p>
+	  	</div>
+
+		<div style="margin-top:10px;">
+                <h3>案例</h3>
+                <pre class="prettyprint  Lang-php">
+$config = ConfigService::getService();
+echo $config->get('charset','UTF-8');
+echo $config->replaceGet('cache.*',array(......));
+$config->set()
+...其余操作查看接口
+                </pre>
+                <h3>Tang\Config\IConfig.php源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+               
+                <h3>Tang\Service\CacheService.php 类源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$configServiceSourceCode}
+                </pre>
+              
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

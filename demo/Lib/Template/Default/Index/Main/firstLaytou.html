@@ -1,0 +1,7 @@
+<div>
+    <ul>
+        <!--{loop $applications $application}-->
+        <li><%=application.title%>  -Tags:<!--{loop $application->tags $tag}--> <%=tag.name%> <!--{/loop}--></li>
+        <!--{/loop}-->
+    </ul>
+</div>

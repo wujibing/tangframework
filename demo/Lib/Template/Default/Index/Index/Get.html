@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+        var jsonrpc={};
+    </script>
+    <script type="text/javascript" src="/public/js/jsonrpc.JsonRpc.js"></script>
+    <script type="text/javascript" src="/public/js/jsonrpc.CallStack.js"></script>
+    <script type="text/javascript" src="/public/js/jsonrpc.DelayedTask.js"></script>
+    <script type="text/javascript" src="/public/js/jsonrpc.Observable.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    window.onload = function()
+    {
+        var rpc = new jsonrpc.JsonRpc('http://localhost/index.php?s=Rpc');
+        rpc.call('loadRun',
+                {
+                    success:function(result) {
+                        alert(result);
+                    }
+         });
+    }
+
+</script>
+
+</body>
+</html>

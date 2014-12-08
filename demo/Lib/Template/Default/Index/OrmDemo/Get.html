@@ -1,0 +1,52 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+<!--载入导航条-->
+{include index.nav}
+<!--载入导航条结束-->
+<div class="container " style="margin-top:40px;">
+    <div class="page-header">
+        <h1>ORM查看<a href="{Url('index/OrmDemo/main')}">列表</a></h1>
+    </div>
+
+
+    <div style="margin-top:10px;">
+
+            <div class="input-group">
+                <span class="input-group-addon">userName</span>
+                {$value[userName]}
+            </div>
+
+
+
+            <div class="input-group">
+                <span class="input-group-addon">realName</span>
+                {$value[realName]}
+            </div>
+
+
+            <div class="input-group">
+                <span class="input-group-addon">email</span>
+                {$value[info][email]}
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">qq</span>
+                {$value[info][qq]}
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">tag</span>
+                <!--{foreach $value->tags $tag}-->
+                {$tag->tag}
+                <!--{/foreach}-->
+            </div>
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

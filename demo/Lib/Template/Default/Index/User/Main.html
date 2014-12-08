@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<h3>用户列表 <a href="{Url('index/user/insert','',true)}">添加用户</a></h3>
+<table>
+    <tr>
+        <th>UserId</th><th>UserName</th><th>RealName</th>
+    </tr>
+<!--{foreach $result $user}-->
+    <tr>
+        <th>{$user->userId}</th><th>{$user->userName}</th><th>{$user->realName}</th><td><a href="{Url('index/user/update','userId='.$user->userId,true)}">编辑</a> <a href="{Url('index/user/delete','userId='.$user->userId,true)}">删除</a></td>
+    </tr>
+<!--{/foreach}-->
+</table>
+<div id="page">
+    Total:{$count} 最大页数：{$maxPage}
+    <div>
+        <!--{foreach $pages $value}-->
+        <a href="{Url('index/user/main','page='.$value['page'],true)}" <!--{if $value['name'] == $page}-->class="change"<!--{/if}-->>{$value[name]}</a>
+        <!--{/end}-->
+    </div>
+</div>
+</body>
+</html>

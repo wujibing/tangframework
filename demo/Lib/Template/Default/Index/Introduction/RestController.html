@@ -1,0 +1,25 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>RestController</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+            RestController提供Rest风格的控制器，RestController继承于WebController,于WebController的Ajax不同，RestController默认支持Ajax,并且是根据后缀名来进行返回。
+            例如：
+            /index/index/main.json[返json] /index/index/main.xml[返xml] /index/index/main.yaml[返yaml] 如果没有后缀名或者后缀名不同于json xml yaml则返回html
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

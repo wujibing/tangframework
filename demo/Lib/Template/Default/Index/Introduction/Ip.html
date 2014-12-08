@@ -1,0 +1,36 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>ClientIp服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Tang\Web\Ip\ClientIpService::getService()获取的是当前用户的IP信息。可以获取用户的IP地址。IP2LONG地址、IP位置、ISP等信息</p>
+	  	</div>
+	  	
+	  		您的IP：{$ip->getIp()}<br/>
+	  		IP2LONG：{$ip->getLong()}<br/>
+
+
+		<div style="margin-top:10px;">
+				
+            
+                <h3>Tang\Web\Ip\IClientIp  接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                   {$interfaceSourceCode}
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>JsonRpcController</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>Tang\Web\Controllers\JsonRpcController继承Controller类</h4>
+		    <p>json rpc 是一种一json为消息格式的远程调用服务，它是一套允许运行在不同操作系统、不同环境的程序实现基于Internet过程调用的规范和一系列的实现。这种远程过程调用可以使用http作为传输协议，也可以使用其它传输协议，传输的内容是json消息体。</p>
+	  	</div>
+		<div style="margin-top:10px;">
+            JsonRpcController没有视图，所以每个操作需要return值交给客户端调用者。
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

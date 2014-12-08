@@ -1,0 +1,94 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Session服务</h1>
+		</div>
+
+		
+	  	{include DemoBtn}
+		<div style="margin-top:10px;">
+				在TangFramework中，使用Session非常简单！<br/>
+				1、在Web控制器中调用$this->request->session() <br/>
+				2、通过Cookie的Service获取Cookie对象。使用\Tang\Web\Session\SessionService::getService()<br/>
+				通过上述两种方法可获得\Tang\Web\Session\ISession接口对象。然后使用该对象进行session的读写删除操作<br/>
+				
+				<h3>Session的配置</h3>
+				Session的配置文件是Session.conf文件，下面是默认配置。
+				<pre class="prettyprint Lang-js">
+							{
+	"defaultDriver":"json",//支持file database redis  memcached 默认使用json
+	"directory":"Session",//使用file或json的时候，保存在data目录下的文件夹名
+	"expire":86400,//Session时效 
+	"database"://当设置Session存储为关系数据库时需要设置
+	{
+		"source":"test", //使用的数据源
+		"tableName":"session"//表名
+	},
+	"memcachedSource":"session", //memcached session驱动使用的数据源
+	"redisSource":"session" //redis session驱动使用的数据源
+}
+						</pre>
+
+				<h3>基本实例</h3>
+				<pre class="prettyprint   Lang-php">
+							$session = SessionService::getService();
+$session->set('name','value');
+$session->get('name');
+$session->delete('name');
+$session->destroy();
+						</pre>
+
+				<h3>\Tang\Web\Session\ISession接口源码</h3>
+				<pre class="prettyprint  Lang-php">
+<?php
+namespace Tang\Web\Session;
+use Tang\Manager\IManager;
+
+interface ISession extends IManager
+{
+    /**
+     * 获取session值
+     * @param string $name session名称
+     * @param string $defaultValue  如果没有值返回的一个默认值
+     * @return mixed
+     */
+    public function get($name,$defaultValue='');
+
+    /**
+     * 设置session
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
+    public function set($name,$value);
+
+    /**
+     * 删除session
+     * @param string $name
+     * @return mixed
+     */
+    public function delete($name);
+
+    /**
+     * 销毁session会话
+     * @return mixed
+     */
+    public function destroy();
+}
+					</pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

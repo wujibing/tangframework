@@ -1,0 +1,40 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>I18n服务</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>如何加入自己的语言包？</h4>
+		    <p>开发者可在网站目录Lib/I18n/语言/编码/下建立自己的语言包。例如建立User.php，里面的内容为返回一个数组。语言键对应值。例如<?php return array('login'=>'登录','hi!%s'=>'您好!%s')</p>
+	  	</div>
+
+		<div style="margin-top:10px;">
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+$I18n = \Tang\Services\I18nService::getService();
+echo $I18n->get('welcome!%s',array('您的名字'));//输出welcome!您的名字
+echo $I18n->get('user->login');//载入自定义的User语言包login项
+echo $I18n->get('user->hi!%s',array('jack'));//输出您好!jack
+...其余操作查看接口
+                </pre>
+                <h3>Tang\I18n\II18n接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+              
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

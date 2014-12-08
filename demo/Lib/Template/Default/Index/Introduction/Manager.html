@@ -1,0 +1,46 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>管理器简介</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>什么是管理器？</h4>
+		    <p>管理器用于管理所有具有实现相同接口类，比如在服务简介里面的Cache，因为Cache能包含许多相同的存储类，比如redis memcache file...。requeste有分cli模式和web模式，所以requeste也有个管理器来管理requeste，在web模式下调用WebRequester类，cli模式下调用CliRequester</p>
+	  	</div>
+	  <div class="alert alert-warning" role="alert">管理器的本质就是给服务提供的对象！</div>
+		<div style="margin-top:10px;">
+                <h3>案例</h3>
+                我们就以cache模型为例,不新编写了。
+                我们先查看CacheService的源码
+                <h3>Tang\Cache\CacheService.php源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$cacheServiceSourceCode}
+                </pre>
+                在这里register方法根据配置文件实例了cache相关联的类，该类必须继承\Tang\Manager\IManager接口。<br/>
+                <pre class="prettyprint  Lang-php">
+$config = static::$config->replaceGet('cache.*',array('directory'=>'Cache','defaultDriver'=>'json','redisSource'=>'cache','memcachedSource'=>'cache','database'=>array('source'=>'','tableName'=>'cache')));</pre>这里获取了Cache配置文件。并传递了给管理对象。我们在来看CacheManager对象
+                <h3>Tang\Manager\CacheManager.php 类源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$cacheManagerSourceCode}
+                </pre>
+                说一说管理器的原理，driver($name='')方法用来获取驱动实例，如果$name参数为空的话。则使用默认的驱动名称，默认的驱动从配置文件里面的defaultDriver设置，该设置不能为空，并且在管理类必须包含一个create[驱动名称首字母大写]Driver的方法来创建驱动。getIntreface()方法的作用是返回驱动接口，如果创建的驱动没有实现getIntreface()返回的接口地址时候，会抛出一个异常。<br/>
+                管理器类实现了__call方法，当调用不存在的方法时候，将会进行$this->driver()->调用的方法进行调用。所以在配置文件中defaultDriver配置很重要
+				<h3>Tang\Manager\IManager.php 接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

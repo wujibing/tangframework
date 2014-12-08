@@ -1,0 +1,20 @@
+﻿将test.sql导入数据库
+修改Lib\Config\Database.conf文件 修改default下面的数据库信息
+
+修改 index.php。将
+include __DIR__.'/../trunk/TangApplication.php'; 引入正确的地址
+
+服务端配置：
+
+Nginx:
+可在location /里面配置
+if (!-e $request_filename) 
+{
+	rewrite  ^/(.*)$  /index.php?s=$1  last;
+        break;
+}
+或者
+try_files $uri $uri/ /index.php?s=$uri&$args;s
+
+
+在apache下可自己进行伪静态或者pathinfo模式。

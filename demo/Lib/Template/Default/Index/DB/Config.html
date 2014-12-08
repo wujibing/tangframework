@@ -1,0 +1,57 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>数据库配置</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+            <h4>说明</h4>
+            <p>Tang的数据库很大部分借鉴于laravel的DB部分。非常感谢laravel！</p>
+        </div>
+
+		<div style="margin-top:10px;">
+            数据配置位于Database.conf文件。
+            例如：
+            <pre class="prettyprint  Lang-php">
+{
+            //这是一个数据源的对象，default为数据源名称 开发者可定义N个数据源。
+            "default":
+            {
+                "charset":"utf8",//编码
+                "collate":"",//排序规则
+                "dbName":"test",//数据库名
+                "tablePrefix":"cms_",//表前缀
+                "driver":"mysql",//驱动 mysql pgsql 暂时支持这两种
+                "persistent":1,//是否持久链接
+                "readWriteSeparate"://是否读写分离
+                {
+                    "support":0, //1为支持
+                    "masterNumber":2//写入服务器数量
+                },
+                "info"://这下面是服务器信息数组支持读写分离的话要填写多个服务器
+                [
+                    {
+                        "host":"127.0.0.1",
+                        "username":"root",
+                        "password":"123",
+                        "port":"3306",
+                        "unixSocket":""//使用UNIXSOCKET连接
+                    }
+                ]
+            }
+    }
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

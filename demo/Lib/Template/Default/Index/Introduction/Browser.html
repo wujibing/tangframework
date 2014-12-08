@@ -1,0 +1,38 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Browser服务</h1>
+		</div>
+<div class="bs-callout bs-callout-danger">
+		    <h4>你造吗？</h4>
+		    <p>Tang\Web\Browser::getService()获取的是用户浏览器信息。在多语言环境下，我们可以根据getLanguage()获取语言属性，并设置语言包。达到多语言目的</p>
+	  	</div>
+	  	
+	  		您的浏览器：{$browserName}(Version:{$browserVersion})<br/>
+	  		操作平台：{$browserPlatform}<br/>
+	  		语言：{$browserLanguage}<br/>
+	  		UserAgent:{$browserUserAgent}<br/>
+	  		支持ActiveX：<!--{if $browserSupportsActiveX}-->支持<!--{else}-->不支持<!--{/if}--><br>
+
+		<div style="margin-top:10px;">
+				
+            
+                <h3>Tang\Web\Browser\IBrowser  接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

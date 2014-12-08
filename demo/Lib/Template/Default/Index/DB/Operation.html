@@ -1,0 +1,38 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>数据库操作</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+            <p>完成数据库配置后，就可以直接使用DB类获取连接对象.</p>
+            <h3>基本操作</h3>
+            <pre class="prettyprint  Lang-php">\Tang\Database\Sql\DB::get('数据源名称')->select('select * from users where id = ?',array(1002),'索引字段');</pre>
+            <p>select方法总是返回一个包含查询结果的 array。</p>
+            <p>执行 insert/update/delete 语句</p>
+            <pre class="prettyprint  Lang-php">\Tang\Database\Sql\DB::get('数据源名称')->statement('insert update delete ...sql语句',array(绑定的参数));</pre>
+            <h3>事务</h3>
+            <p>将需要在事务模式下执行的查询放入 transaction 方法内即可</p>
+            <pre class="prettyprint  Lang-php">
+\Tang\Database\Sql\DB::get('数据源名称')->transaction(function($conn)
+{
+    $conn->select('...');
+    $conn->statement('...');
+});
+            </pre>
+            <p>如果callback里面发出任何异常，则会rollback。否则会commit</p>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

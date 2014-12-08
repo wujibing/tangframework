@@ -1,0 +1,55 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>ORM关联列表 <a href="{Url('index/OrmDemo/insert')}">添加</a> <a href="{Url('index/OrmDemo/relationInsert')}">关联添加</a></h1>
+		</div>
+
+
+		<div style="margin-top:10px;">
+
+			<form role="form" method="get" action="{Url('index/OrmDemo/main')}">
+			  <div class="form-group">
+			    <label >用户名搜索</label>
+			    <input type="text" class="form-control" value="{$_GET['userName']}" name="userName">
+			  </div>
+			  <button type="submit" class="btn btn-default">搜索</button>
+
+			</form>
+
+			<table class="table table-striped">
+				<tr>
+			        <th>ID</th><th>用户名</th><th>真是姓名</th><th>QQ</th><th>EMAIL</th><th>标签</th><td>操作</td>
+			    </tr>
+			<!--{foreach $result $user}-->
+			    <tr>
+			        <td>{$user->userId}</td><td>{$user->userName}</td><td>{$user->realName}</td><td>{$user->info->qq}</td><td>{$user->info->email}</td><td>
+			        <!--{foreach $user->tags $tag}-->
+			        {$tag->tag} 
+			        <!--{/foreach}-->
+			    	</td><td><a href="{Url('index/OrmDemo/get','userId='.$user->userId)}">查看</a>  <a href="{Url('index/OrmDemo/update','userId='.$user->userId)}">编辑</a>  <a href="{Url('index/OrmDemo/delete','userId='.$user->userId,'',true)}">删除</a></td>
+			    </tr>
+			<!--{/foreach}-->
+			</table>
+		</div>
+		<div>
+			<ul class="pagination">
+				<!--{foreach $pages $value}-->
+        		<li <!--{if $value['name'] == $page}-->class="active"<!--{/if}-->><a href="{Url('index/OrmDemo/main','page='.$value['page'].'&userName='.$_GET['userName'])}" >{$value[name]}</a></li>
+       			<!--{/foreach}-->
+			  
+			</ul>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+
+<form action="{Url('index/crypt/demo')}" method="post" target="_blank">
+	<table>
+		<tr>
+			<th>加密内容</th>
+			<td><input type="text" name="content" class="form-control" placeholder="TangFramework!" value="TangFramework!"></td>
+		</tr>
+		<tr>
+			<th>加密驱动</th>
+			<td><select name="driver">
+				<option value=''>默认驱动</option>
+				<option value='aes'>aes</option>
+				<option value='blowFish'>blowFish</option>
+				<option value='loki97'>loki97</option>
+				<option value='thirdDes'>thirdDes</option>
+				<option value='twoFish'>twoFish</option>
+				<option value='xTea'>xTea</option>
+				<option value='gost'>gost</option>
+				</select></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="submit" class="btn btn-default dropdown-toggle" value="获取结果"></td>
+		</tr>
+	</table>
+</form>

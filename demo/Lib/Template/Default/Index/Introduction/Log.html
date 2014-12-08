@@ -1,0 +1,62 @@
+
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>日志服务</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+				日志服务暂时提供文件,数据库驱动，后面会提供更多的日志存储驱动。
+                <h3>基本实例</h3>
+                <pre class="prettyprint  Lang-php">
+\Tang\Log\LogService::getService()->write('我是日志消息','ERR');
+\Tang\Log\LogService::getService()->write('我是日志消息',\Tang\Log\LogService::CRIT);
+...其余操作查看接口
+                </pre>
+
+                <h3>配置 Log.conf</h3>
+                <pre class="prettyprint  Lang-php">
+{
+    "record":true,//默认开启 填写flase的话则不记录
+    "recordLevel":
+    [
+        "MERG","ALERT","CRIT"//只记录"MERG","ALERT","CRIT"类型日志
+    ],//允许记录的日志级别 可用值MERG ALERT CRIT ERR WARNING NOTIC INFO DEBUG SQL   为空的时候记录所有的级别 E
+    "defaultDriver":"file",//默认的驱动 支持file database
+    "file":
+    {
+        "directory":"Log",//日志的目录，位于Application配置下dataDirctory设定下。
+        "filePath":"%Y-%m/TangLog-%y-%m-%d.log"//日志文件名格式  %后面加上date的日期格式就好了
+    },
+    "database":
+    {
+        "tableName":"log",//表名
+        "source":"" //使用的数据源
+    }
+}
+                </pre>
+
+                <h3>Tang\Log\ILogManager 管理器接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode}
+                </pre>
+
+              	<h3>Tang\Log\ILoger 日志存储驱动接口源码</h3>
+                <pre class="prettyprint  Lang-php">
+                    {$interfaceSourceCode2}
+                </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

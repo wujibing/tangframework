@@ -1,0 +1,85 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>Cookie服务</h1>
+		</div>
+		
+	  	{include DemoBtn}
+		<div style="margin-top:10px;">
+				在TangFramework中，使用Cookie非常简单！<br/>
+				1、在Web控制器中调用$this->request->cookie() <br/>
+				2、通过Cookie的Service获取Cookie对象。使用\Tang\Web\Cookie::getService()<br/>
+				通过上述两种方法可获得\Tang\Web\Cookie\ICookie接口对象。然后使用该对象进行cookie的读写删除操作<br/>
+				
+				<h3>Cookie的配置</h3>
+				Cookie的配置文件是Cookie.conf文件，下面是默认配置。<br/>
+				当使用set($name,$value,$expire=-1,$path='',$domain='');expire path domain都为默认值的时候，将使用配置文件中的值进行设置。
+				<pre class="prettyprint Lang-js">
+							{
+		"expire" : "86400", //Cookie的时效
+		"path" : "",//Cookie生效路径
+		"domain" :"",//域
+		"prefix" : "tang-"//Cookie前缀
+}
+						</pre>
+
+				<h3>基本实例</h3>
+				<pre class="prettyprint   Lang-php">
+							$cookie = \Tang\Web\Cookie::getService();
+$cookie->set('name','value');
+echo $cookie->get('name');
+$cookie->delete('name');
+$cookie->clean();
+						</pre>
+
+				<h3>\Tang\Web\Cookie\ICookie接口源码</h3>
+				<pre class="prettyprint  Lang-php">
+<?php
+namespace Tang\Web\Cookie;
+use Tang\Interfaces\ISetConfig;
+
+interface ICookie extends ISetConfig
+{
+    /**
+     * 设置一个Cookie
+     * @param string $name cookie名
+     * @param string $value cookie值
+     * @param string $expire 时效
+     * @param string $path 路径
+     * @param string $domain 域
+     */
+    public function set($name,$value,$expire=-1,$path='',$domain='');
+    /**
+     * 获得一个Cookie,如果没有值，则返回$default
+     * @param string $name
+     * @param null $default
+     * @return string
+     */
+     public function get($name,$default=null);
+	    /**
+	     * 删除一个Cookie
+	     * @param string $name
+	     */
+	    public function delete($name);
+	    /**
+	     * 清除cookie
+	     */
+	    public function clean();
+}
+					</pre>
+
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

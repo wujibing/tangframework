@@ -1,0 +1,114 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>ORM关联</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+            <p>通常我们所说的关联关系包括下面三种：</p>
+
+    <p>一对一关联 ：HAS_ONE</p>
+    <p>一对多关联 ：HAS_MANY</p>
+    <p>多对多关联 ：MANY_TO_MANY</p>
+    <p>属于关联 ：BELONGS_TO</p>
+            <h3>关联定义</h3>
+            <p>定义模型relationRules属性</p>
+            <pre class="prettyprint  Lang-php">
+$this->relationRules = array(
+            'users' => array(//定义users关联。直接使用$model->users可访问
+                'type' => Factory::HAS_MANY, //定义关联类型
+                'modelName' => 'Admin.User',//关联模块
+                'foreignKey' => 'shopId',//关联模型字段，如果不填写则为关联模型主键
+                'localKey' => 'shopId',//关联查询的字段 不填写为模型主键
+                'constraint' => function($relation)//查询条件闭包 参数是关联对象，可用$relation设置一些查询条件
+                {
+                    $relation->where('userId','<',100);
+                    //查询条件
+                },
+                'limit' => 10//查询的数目 //对于HAS_MANY MANY_TO_MANY有效
+            )
+        );
+            </pre>
+            <p>MANY_TO_MANY需要一个中间表来进行关联！下面是一个MANY_TO_MANY的配置</p>
+                        <pre class="prettyprint  Lang-php">
+$this->relationRules = array(
+            'tags' => array(
+                'type' => Factory::MANY_TO_MANY,
+                'modelName' => 'Admin.Tag',//关联模型
+                'foreignKey' => 'id',//关联模型字段，如果不填写则为关联模型主键
+                'relationTable' => 'application_tag',//中间表名 如果不输入则为当前模型表名_关联模型表名
+                'relationForeignKey' => 'tagId',//中间表的关联字段 该值和关联模型外键字段一样。如果不填写的话则为关联模型表名+Id
+                'relationLocalKey' => 'application_id',//中间表的模型字段 该值和模型外键字段一样。如果不填写的话则为模型表名+Id
+                //'localKey' => 'id',//不填写为模型主键
+                'limit' => 10,
+                'constraint' => function($relation){
+                }
+            )
+        );
+            </pre>
+            <h3>获得关联结果</h3>
+            <pre class="prettyprint  Lang-php">$tags = User::find(1)->tags;//假设以上面tags关联定义
+foreach($tags as $tag)
+{
+    echo $tag->字段;
+}
+$xx = User::find(1)->xx;//假设xx定义的HAS_ONE
+if($xx)
+echo $xx->xxx;
+            </pre>
+            <h3>预先加载</h3>
+            <p>预先加载的存在是为了缓解 N + 1 查询问题。</p>
+            <pre class="prettyprint  Lang-php">
+$users = User::get();
+foreach($users as $user)
+{
+    foreach($user->tags as $tag)
+    {
+        echo $tag->字段;
+    }
+}
+            </pre>
+            <p>此循环将执行一个查询获取表中的所有用户，然后另一个查询和该用户相关联的TAG。所以，如果我们有100用户，这个循环将运行101查询。</p>
+            <p>值得庆幸的是，我们可以使用预先加载来减少查询的数量。这个关系应该被预先加载通过 with 函数指定：</p>
+                        <pre class="prettyprint  Lang-php">
+$users = User::with('tags')->get();
+foreach($users as $user)
+{
+    foreach($user->tags as $tag)
+    {
+        echo $tag->字段;
+    }
+}</pre>
+            <p>在上面的循环中，只有两个查询被执行：</p>
+            <pre class="prettyprint  Lang-php">
+select * from [表前缀]user
+select * from tags where 关联键 in (1, 2, 3, 4, 5, ...)
+</pre>
+
+<p>明智的使用预先加载可以大大提高应用程序的性能。</p>
+
+<p>当然，您可以一次性预先加载多个关系：</p>
+<p><p>User::with('tags','friend')->get();</p>
+
+
+<h3>插入/修改/删除关联模型</h3>
+<p>和with一样的用法，不过是使用withDml</p>
+<pre class="prettyprint  Lang-php">
+User::withDml('tags')->(insert|update)(array('userName'=>'x','tags' => array('tag'=>'cc','tag'=>'cc')));
+User::withDml('tags')->delete();
+</pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

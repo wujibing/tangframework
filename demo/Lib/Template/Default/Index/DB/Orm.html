@@ -1,0 +1,150 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>ORM</h1>
+		</div>
+        <div role="alert" class="alert alert-danger">
+            请确保已经配置好数据库。
+            </div>
+		<div style="margin-top:10px;">
+            <h3>基本用法</h3>
+            首先，创建一个Model模型。模型通常在Lib/Applications/模块/Model目录，但是您可以自由地把它们放在任何地方，只要定义的namespace路径与网站目录路径相同。
+            <pre class="prettyprint  Lang-php">
+<?php
+namespace Lib\Applications\Admin\Model;
+use Tang\Database\Sql\Model;
+class User extends Model
+{
+}</pre>
+我们并没有告诉 Model 我们为 User 模型使用了哪一张表。类名的小写、复数的形式将作为表名，除非它被显式地指定。所以，在这种情况下，Model 将假设 User 模型在 user 表中保存记录。您可以在模型中定义一个 tableName 属性来指定一个自定义的表名：
+<pre class="prettyprint  Lang-php">
+<?php
+namespace Lib\Applications\Admin\Model;
+use Tang\Database\Sql\Model;
+class User extends Model
+{
+    protected $tableName = 'user';
+}</pre>
+<h3>更改数据源</h3>
+<p>有时候模型不适用默认的数据源时，我们可以指定dbSource属性或者指定connection属性</p>
+<p>dbSource指定要使用的数据源名称，如果connection属性没有值，则会使用该数据源连接对象</p>
+<p>connection指定要使用的数据库对象</p>
+<pre class="prettyprint  Lang-php">
+<?php
+namespace Lib\Applications\Admin\Model;
+use Tang\Database\Sql\Model;
+class User extends Model
+{
+    protected $tableName = 'user';
+    protected $dbSource = 'test';
+}
+也可以在构造函数传递参数构建
+$user = new User(Connection $connection=null,$dbSource=null)
+</pre>
+            获取所有记录
+<pre class="prettyprint  Lang-php">
+$users = User::all();
+根据主键获取一条记录
+$user = User::find(1);
+var_dump($user->name);
+</pre>
+
+<div role="alert" class="alert alert-danger">
+     所有在 [查询构建器] 中适用的函数在 Model 模型的查询中同样适用。
+</div>
+<h3>插入数据</h3>
+<pre class="prettyprint  Lang-php">
+User::insert(array('email' => 'xx@xx.com', 'userName' => 'xccvx'));
+//也可使用
+User::create(array('email' => 'xx@xx.com', 'userName' => 'xccvx'));
+            </pre>
+            <h3>更新数据</h3>
+            更新数据需要先检索数据
+<pre class="prettyprint  Lang-php">
+$user = User::find(1);
+$user->update(array('email' => 'xx@xx.com'));
+            </pre>
+            <h3>删除数据</h3>
+<pre class="prettyprint  Lang-php">
+$user = User::find(1);
+$user->delete();
+            </pre>
+            <p>也可以在一组模型中运行删除查询：</p>
+<pre class="prettyprint  Lang-php">
+User::where('score', '>', 80)->delete();
+</pre>
+<h3>字段保护</h3>
+<p>有时候我们不希望字段暴露出去，我们就可以设置maps属性，设置一个值来替代字段，</p>
+<pre class="prettyprint  Lang-php">
+protected $maps = array('新键' => '字段键', );
+
+$user = User::find(1);后
+我们就可以使用$user->新键 来访问字段键的值。在更新、插入的时候都可以用来替换。
+</pre>
+
+<h3>模型事件</h3>
+<p>在前面的TangApplication和ModelController里面都有讲事件，其实都是一样的，模型事件包含了增加前 增加后 删除前 删除后 更新前 更新后6个事件</p>
+<p>传递的参数</p>
+<pre class="prettyprint  Lang-php">
+增加前 $this[当前模型] $marking[当前操作标示] &$attributes[数据,编写函数的时候，一定要注意该值是引用]
+增加后 $this[当前模型] $marking[当前操作标示]
+删除前 $this[当前模型]
+删除后 $this[当前模型]
+更新前 $this[当前模型] $marking[当前操作标示] &$attributes[数据,编写函数的时候，一定要注意该值是引用]
+更新后 $this[当前模型] $marking[当前操作标示]
+
+使用event属性添加删除事件
+</pre>
+
+
+<h3>数据的过滤</h3>
+<p>为了使得添加/更新的数据安全，特地增加了validates属性，用来验证数据的合法性！</p>
+<p>validates属性是一个数组，我们可以定义使用\Tang\Util\Validate里面的方法、正则、自定义函数来验证数据的合法性，如果不合法将抛出一个异常，系统会提示给用户！</p>
+<p>validates定义</p>
+<pre class="prettyprint  Lang-php">
+protected $validates = array('字段名称'=>array(
+        'isEmpty' => true|false,//是否允许验证的值为空
+        'type' => 'regex|callback|validate',//验证的类型 regex表示正则 callback表示使用回调 validate 表示使用\Tang\Util\Validate
+        'message' => 'string|array('key'=>'语言包key','args'=>array(语言参数))' //如果未验证通过的消息，如果为数组的时候则调用语言包
+        //上面是公有定义
+        //下面是私有定义
+        //---------regex-------------
+        'regex' => '正则表达式'
+        //---------regex-------------
+        //---------callback----------
+        'parameters' => array( 'x'=>1,'c'=>'xs'); //传递给回调的参数，验证的值为第一个参数，后面依次为parameters的值 例如次项就要接受3个参数
+        'callback' => 'string|array(对象,方法)|匿名函数';
+        //---------callback----------
+        //---------validate----------
+        'parameters' => array( 'x'=>1,'c'=>'xs'); //传递给回调的参数，验证的值为第一个参数，后面依次为parameters的值 例如次项就要接受3个参数
+        'method' => 'string';//\Tang\Util\Validate里面的方法名称
+        //---------validate----------
+    ));
+</pre>
+
+        <h3>根据标示选择字段</h3>
+        <p>标示就是 模块名称+控制器名称+操作名称</p>
+        <p>标示是让模型根据什么样操作进行字段的什么字段的插入或更新，保证一些不需要的字段插入/修改</p>
+        <p>定义allowColumns属性</p>
+        <pre class="prettyprint  Lang-php">
+    protected $allowColumns = array(
+            'IndexUserupdate' => array('userName','password');
+            'IndexUserinsert' => array('userName','password','realName');
+        );
+    上面操作就是在在Index模型User控制器update操作进行插入或更新时候，只能提交userName,password字段数据，
+</pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

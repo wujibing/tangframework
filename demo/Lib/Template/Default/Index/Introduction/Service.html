@@ -1,0 +1,169 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>服务简介</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>为什么使用服务？</h4>
+		    <p>在我以前的框架(ckFramework)中，都是依赖继承/接口来扩展使用，例如缓存系统中，我们要增加一个缓存就要根据缓存接口编写驱动，然后使用Cache::register('cacheName',cacheInstance)。使用的时候就用Cache::init('cacheName')->get set...,我以为这已经很简单了！</p>
+		    <p>
+		    	但是，有一次我同事在做一个项目的时候，需要使用redis缓存，当时框架的缓存只有file memcached phparray。于是他就根据接口写了redis缓存类，在项目初始化的时候需要Cache::register('redis',new Redis);他就跟我抱怨:"有没必要这么麻烦，我写了个类，还需要在加载配置文件后的事件里面加入Cache注册！能简单一点么？",我想了很久，于是就有了新框架(Tang)的核心"ServiceProvider"。</p>
+		   	<p>
+		   		ServiceProvider依赖配置文件进行对象加载，并且根据服务进行相对应的依赖注入。比如上面的例子，我们只需要实现根据接口实现redis驱动，Cache管理类(用于创建模板对象,参阅管理器简介)。在缓存配置文件中修改默认的缓存驱动为redis类名，在Application配置文件中将services对象cache属性设置为新Cache管理类的地址即可！而不需要对框架和程序做任何改变。虽然比上面复杂了点(因为有了Cache管理类的存在，在没有管理器的存在时候，只需要编写一个类替换就好了！)，但是我们不需要动任何程序。
+		   	</p>
+	  	</div>
+	  	<div class="alert alert-success" role="alert">服务实现了__callStatic方法，如果服务没有方法时候，将会调用服务对象的方法哦！例如CacheService::set(..)</div>
+	  <div class="alert alert-warning" role="alert">服务都需要接口！根据接口，开发者可开发自己的配置、IO...的框架核心体系，而不用去修改框架自身！</div>
+	  
+		<div style="margin-top:10px;">
+				下面，我们来建立一个关于输出的一个ServiceProvider(这是一个非常简单的例子,请勿较真。)。我们将所有程序放入网站目录下的Lib\Service目录。
+				在Service目录下建立OutPut目录
+				<h3>建立提供给服务的接口Lib\Service\OutPut\IOutPut.php</h3>
+				<pre class="prettyprint Lang-php">
+					<?php
+/**
+ * 我们要建立namespace方便框架定位加载我们的文件
+ * 如果不写入namespace的话，需要开发者自己include或者编写自己的spl_autoload_register
+ */
+namespace Lib\Service\OutPut;
+
+/**
+ * 输出接口
+ * Interface IOutPut
+ * @package Lib\Service\OutPut
+ */
+interface IOutPut
+{
+    /**
+     * 输出$string
+     * @param $string
+     * @return mixed
+     */
+    public function write($string);
+
+    /**
+     * 输出$array数组
+     * @param array $array
+     * @return mixed
+     */
+    public function writeArray(array $array);
+}
+				</pre>
+
+				<h3>建立提供给服务类Lib\Service\OutPut\OutPuter.php</h3>
+				<pre class="prettyprint   Lang-php">
+							<?php
+/**
+ * 我们要建立namespace方便框架定位加载我们的文件
+ * 如果不写入namespace的话，需要开发者自己include或者编写自己的spl_autoload_register
+ */
+namespace Lib\Service\OutPut;
+
+class OutPuter implements IOutPut
+{
+    /**
+     * 输出$string
+     * @param $string
+     * @return mixed
+     */
+    public function write($string)
+    {
+        echo $string;
+    }
+
+    /**
+     * 输出$array数组
+     * @param array $array
+     * @return mixed
+     */
+    public function writeArray(array $array)
+    {
+        print_r($array);
+    }
+}
+						</pre>
+
+				<h3>实现服务类Lib\Service\OutPutService.php</h3>
+				<pre class="prettyprint  Lang-php">
+					<?php
+/**
+ * 我们要建立namespace方便框架定位加载我们的文件
+ * 如果不写入namespace的话，需要开发者自己include或者编写自己的spl_autoload_register
+ */
+namespace Lib\Service;
+use Tang\Services\ServiceProvider;
+
+/**
+ * 服务对象需要继承ServiceProvider
+ * Class OutPutService
+ * @package Lib\Service
+ */
+class OutPutService extends ServiceProvider
+{
+    /**
+     * 这里是因为可以给开发者提供代码提示，如果不需要可以不写该方法
+     * 一定要写@return 返回值才能代码提示 我们这里返回接口地址
+     * @return \Lib\Service\OutPut\IOutPut
+     */
+    public static function getService()
+    {
+        return parent::getService();
+    }
+
+    /**
+     * 我们来实现注册对象，每个服务都必须实现该方法
+     */
+    protected static function register()
+    {
+        //initObject方法的第一参数是名称，这里会从配置文件中根据名称找到类地址
+        //第二个参数是接口地址，如果提供的对象没有实现该接口，会有异常
+        return static::initObject('output', '\Lib\Service\OutPut\IOutPut');
+    }
+}
+				</pre>
+				<h3>修改配置文件Lib\Config\Application.conf</h3>
+				<pre class="prettyprint  Lang-php">
+				//找到services对象，如果没有找到可新建立，添加我们的output和相对应的类地址
+				{
+...........
+    "services":
+    {
+        "output":"\\Lib\\Service\\OutPut\\OutPuter"
+    },
+    ..............
+}
+				</pre>
+				<h3>测试一下</h3>
+				<div class="btn-group">
+  <a href="{Url('index/introduction/serviceDemo')}" target="_blank" class="btn btn-default">查看演示</a>
+</div>
+				<pre class="prettyprint  Lang-php">
+				    public function serviceDemo()
+    {
+        $outPuter = OutPutService::getService();
+        $outPuter->write('我要输出数组了：');
+        $outPuter->writeArray(array('Tang','Framework!'));
+    }
+				</pre>
+				<h3>后续</h3>
+				<p>以后我们只需要根据IOutPut接口建立一个新的对象，并且在配置文件中修改output的类地址就可以替换对象了。从而不需要改动任何程序，是否挺爽？</p>
+				<h3>Tang\Services\ServiceProvider.php 源码</h3>
+				
+				<pre class="prettyprint  Lang-php">
+				    {$interfaceSourceCode}
+				</pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

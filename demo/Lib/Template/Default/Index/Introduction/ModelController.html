@@ -1,0 +1,66 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>ModelController</h1>
+		</div>
+
+		<div style="margin-top:10px;">
+			<p>ModelController就是默认绑定了模型，并且包含了main(列表),insert(添加),delete(删除),update(更新)操作。</p>
+			<h3>指定模型</h3>
+            <p>ModelController里面包含$modelName属性可设置模块名称[模块名.模型名]，不设置的话，系统会将模型绑定到"当前模块.当前控制器名称"的模型，</p>
+
+            <h3>指定分页数量</h3>
+            <p>$listRows属性为每页的数量，修改即可</p>
+
+            <h3>ModelController的事件</h3>
+            <p>为了更方便的使用ModelController，ModelController加入的事件属性，在添加/删除/编辑的时候，会触发事件，开发者可根据实际需求进行添加、删除事件来达到不复制代码块，只需要替换事件就开发完毕。</p>
+            <p>默认的事件</p>
+            <pre class="prettyprint  Lang-php">
+$this->event->addListener('deleteData',function($model)
+{
+    $model->delete();
+});
+//增加默认编辑事件
+$this->event->addListener('updateData',function($data,$model,$hash)
+{
+    $model->update($data,$hash);
+});
+//增加默认添加事件
+$this->event->addListener('insertData',function($data,$model,$hash)
+{
+    $model->insert($data,$hash);
+});
+            </pre>
+            <p>上面是默认的事件。deleteData事件传递$model模型。执行$model->delete();操作</p>
+            <p>下面我们来进行修改事件，来达到不同的目的，下面的代码假设</p>
+             <pre class="prettyprint  Lang-php">
+public function update()//写这个方法主要是看起来直观一点， 这个调用的是默认的update 使用的事件直接是模型->update方法。
+{
+    parent::update();
+}
+//我们在来个修改密码
+public function updatePassword()
+{
+    $this->event->removeAllListeners('updateData');//删除所有的updateData事件，这样我们就可以添加新的事件了，不删除的话会先执行其他的，在执行我们定义的事件
+    $this->event->addListener('updateData',function($data,$model,$hash)
+    {
+        $model->updatePassword($data,$hash);//我们在模型里面定义个updatePassword方法，专门用来处理修改密码
+    });
+    parent::update();
+}
+            </pre>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

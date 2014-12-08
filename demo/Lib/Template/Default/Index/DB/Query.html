@@ -1,0 +1,169 @@
+<html>
+<!--载入css javascript资源-->
+{include index.res}
+<!--载入导航条结束-->
+<body>
+	<!--载入导航条-->
+	{include index.nav}
+	<!--载入导航条结束-->
+	<div class="container " style="margin-top:40px;">
+		<div class="page-header">
+			<h1>查询生成器</h1>
+		</div>
+		<div class="bs-callout bs-callout-danger">
+		    <h4>简介</h4>
+		    <p>查询生成器 为操作数据库提供了一个方便，顺畅的的接口，并能够完成绝大部分查询任务。</p>
+	  	</div>
+
+		<div style="margin-top:10px;">
+            <h3>获取一个查询生成器对象</h3>
+            <p>通过Connection::table('表名称')我们可以获取一个查询生成器对象。</p>
+            
+            <pre class="prettyprint  Lang-php">$query = \Tang\Database\Sql\DB::get('数据源名称')->table('user');</pre>
+            <div role="alert" class="alert alert-danger">
+	      	为了保证效率以及重用性。使用同一个查询生成器对象进行查询的时候还是会加载上一次的查询条件，如果你本次查询条件与上次不一样。建议使用$query->clean()清除查询条件。
+	    	</div>
+            <h3>获取数据</h3>
+            <p>获取一张表里的所有数据</p>
+            <pre class="prettyprint  Lang-php">
+//get($columns = array('*'),$index = '') $columns为查询的字段 $index为索引字段值
+$result = $query->get();
+foreach($result as $user)
+{
+   echo $user['userId'];
+}
+//$result = $query->get(array('*'),'id');result数组的键为结果集索引id的值
+            </pre>
+
+            <p>获取一张表里的一条数据</p>
+<pre class="prettyprint  Lang-php">
+$user = $query->where('name', 'John')->first();
+var_dump($user);
+</pre>
+<p>筛选查询结果</p>
+<pre class="prettyprint  Lang-php">
+$users = $query->->select('name', 'email')->get();
+$users = $query->->distinct()->get();
+$users = $query->->select('name as user_name')->get();
+</pre>
+<p>为已经建立的查询添加筛选</p>
+<pre class="prettyprint  Lang-php">
+$query->select('name');
+$users = $query->addSelect('age')->get();
+</pre>
+<p>使用where条件语句</p>
+<pre class="prettyprint  Lang-php">
+$users = $query->where('score', '>', 100)->get();
+//使用or语句
+$users = $query->where('score', '>', 100)->orWhere('name', 'xx')->get();
+</pre>
+<p>在Where语句中使用Between子句</p>
+<pre class="prettyprint  Lang-php">	
+$users = $query->whereBetween('score', array(80, 100))->get();
+//not between
+$users = $query->whereNotBetween('score', array(80, 100))->get();
+</pre>
+<p>在Where语句中使用In子句，In的内容通过数组传递</p>
+<pre class="prettyprint  Lang-php">	
+$users = $query->whereIn('userId', array(1, 2, 3))->get();
+$users = $query->whereNotIn('userId', array(1, 2, 3))->get();
+</pre>
+<p>使用whereNull方法获取未被清除或未被初始化的记录(字段如果没有指定默认值将会是null)</p>
+<pre class="prettyprint  Lang-php">	
+$users = $query->whereNull('sth')->get();
+</pre>
+<p>Order By语句, Group By语句, 和 Having 语句筛选</p>
+<pre class="prettyprint  Lang-php">	
+$users = $query->orderBy('name', 'desc')->groupBy('count')->having('count', '>', 100)->get();
+</pre>
+<p>Offset 和 Limit语句</p>
+<pre class="prettyprint  Lang-php">	
+$users = $query->offset(10)->limit(5)->get();
+</pre>
+            <h3>插入数据</h3>
+            <pre class="prettyprint  Lang-php">
+$query->insert(array(array('email' => 'xx@xx.com', 'userName' => 'xccx'),array('email' => 'xx@xx.com', 'userName' => 'xcccx')));
+$query->insert(array('email' => 'xx@xx.com', 'userName' => 'xccvx'));
+            </pre>
+            <h3>更新数据</h3>
+
+			<pre class="prettyprint  Lang-php">
+			$query->where('userId','=',2)->update(array('userName' => 'xccxx'));
+            </pre>
+            <h3>删除数据</h3>
+			<pre class="prettyprint  Lang-php">
+			$query->where('userId','=',2)->delete();//删除userId=2的数据
+			$query->delete();//删除所有数据
+			$query->truncate();//清空表
+            </pre>
+
+            <h3>连接查询</h3>
+<p>查询生成器 也可以用来建立数据连接操作，我们看看下面的例子:</p>
+<p>简单连接语句</p>
+<pre class="prettyprint  Lang-php">
+$query->join('contacts', 'users.userId', '=', 'contacts.userId')->join('orders', 'users.userId', '=', 'orders.userId')->select('users.userId', 'contacts.phone', 'orders.price');
+//左连接（Left Join）语句
+$query->leftJoin('posts', 'users.userId', '=', 'posts.userId')->get();
+//指定更多的连接条件:
+$query->join('contacts', function($join)
+{
+    $join->on('users.userId', '=', 'contacts.userId')->orOn(...);
+})>get();
+</pre>
+如果连接的表需要where查询的话
+<pre class="prettyprint  Lang-php">
+$query->join('contacts', function($join)
+{
+    $join->on('users.id', '=', 'contacts.user_id')->where('contacts.user_id', '>', 5);//on 过后加入where操作
+})->get();
+</pre>
+<h3>高级查询条件</h3>
+<p>有时你可能需要创建更高级的where查询，比如 "where exists"筛选 或者给where条件分组. 查询生成器 都能够很好的处理：</p>
+<p>where条件分组</p>
+<pre class="prettyprint  Lang-php">
+$query->where('name', '=', 'John')->orWhere(function($query)
+{
+                $query->where('socre', '>', 80)->where('userId', '>', 100);
+})->get();
+            
+上面的查询将产生如下的 SQL：
+
+select * from [表前缀]user where name = 'John' or (socre > 80 and userId > 100)
+</pre>
+where中的Exists语句
+<pre class="prettyprint  Lang-php">
+$query->whereExists(function($query)
+{
+    $query->select(DB::raw(1))->from('orders')->whereRaw('orders.userId = user.userId');
+})->get();
+
+上面的查询将产生如下的 SQL：
+
+select * from [表前缀]user
+where exists (
+    select 1 from [表前缀]orders where orders.user_id = user.userId
+)
+</pre>
+
+            <h3>聚合查询结果</h3>
+            <p>查询生成器 提供了多个聚合方法, 比如 count, max, min, avg,和 sum.</p>
+<pre class="prettyprint  Lang-php">
+$users = $query->count();
+$score = $query->max('score');
+$score = $query->min('score');
+$score = $query->avg('score');
+$allScore = $query->sum('score');
+</pre>
+            <h3>锁表</h3>
+            <pre class="prettyprint  Lang-php">
+$query->where('userId','=',2)->sharedLock()->get();//共享锁
+$query->where('userId','=',2)->forUpdateLock()->get();//行锁
+            </p>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>
