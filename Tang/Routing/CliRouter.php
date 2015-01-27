@@ -29,15 +29,25 @@ class CliRouter extends BaseRouter implements IRouter
     }
     public function setConfig(array $config)
     {
-        $this->config = array_replace_recursive(array(
+        $this->config = $config;
+    }
+
+    /**
+     * 获取默认的配置
+     * @return array
+     */
+    public function getDefaultConfig()
+    {
+        return [
             'moduleName' => 'm',
             'controllerName'=>'c',
             'actionName' => 'a',
             'defaultModule' => 'index',
             'defaultController' => 'index',
             'defaultAction' => 'main'
-        ),$config);
+        ];
     }
+
     public function getType()
     {
         return 'Cli';

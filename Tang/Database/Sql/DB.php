@@ -92,16 +92,16 @@ class DB
 			$connector = new $dbConfig['class']();
 			if(!$connector instanceof IConnector)
 			{
-				throw new SystemException('The [%s] class does not implement the [%s] interface',array($dbConfig['class'],'\\Tang\\Database\\Sql\\Connectors\\IConnector'),20002);
+				throw new SystemException('The [%s] class does not implement the [%s] interface',array($dbConfig['class'],'\Tang\Database\Sql\Connectors\IConnector'),20002);
 			}
 		} else 
 		{
-			$connectorClass = '\\Tang\\Database\\Sql\\Connectors\\'.$driverClass;
+			$connectorClass = '\Tang\Database\Sql\Connectors\\'.$driverClass;
 			$connector = new $connectorClass();
 		}
 		$connector->setConfig($dbConfig);
 		$connector->connect();
-		$connectorClass = '\\Tang\\Database\\Sql\\Connections\\'.$driverClass;
+		$connectorClass = '\Tang\Database\Sql\Connections\\'.$driverClass;
 		return new $connectorClass($connector->getWritePdo(),$connector->getReadPdo(),$dbConfig['dbName'],$dbConfig['tablePrefix'],$dbConfig);
 	}
 }

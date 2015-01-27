@@ -24,6 +24,11 @@ use Tang\Request\IRequest;
 interface IRouter extends ISetConfig
 {
     /**
+     * 获取默认的配置
+     * @return array
+     */
+    public function getDefaultConfig();
+    /**
      * 执行路由
      * @return mixed
      */

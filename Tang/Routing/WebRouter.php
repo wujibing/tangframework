@@ -62,6 +62,35 @@ class WebRouter extends BaseRouter implements IRouter
     }
 
     /**
+     * 获取默认的配置
+     * @return array
+     */
+    public function getDefaultConfig()
+    {
+        return [
+            'moduleName' => 'module',
+            'controllerName' => 'controller',
+            'actionName' => 'action',
+            'defaultModule' => 'user',
+            'defaultController' => 'index',
+            'defaultAction' => 'index',
+            'model' => 2,
+            'delimiter' => '/',
+            'parametersDelimiter' => '_',
+            'suffixs' => 'html|json|xml|yaml',
+            'defaultSuffix' =>'html',
+            'paramsBindType' => 0,
+            'pathInfo' => [
+                'parmName' => 's',
+                'otherPathInfo' => ['ORIG_PATH_INFO','REDIRECT_PATH_INFO','REDIRECT_URL']
+            ],
+            'moduleAlias' => [],
+            'subDomain' => ['support' => 0,'rules'=>[],'suffix' => '.com'],
+            'rewrite' => ['support' => 0,'rules' => ['public'=>[]]]
+        ];
+    }
+
+    /**
      * 获取网页后缀
      * @return string
      */
@@ -303,6 +332,10 @@ class WebRouter extends BaseRouter implements IRouter
     }
     private function createSuffix($url,$suffix)
     {
+        if($suffix === false)
+        {
+            return $url;
+        }
         if(!$suffix)
         {
             $suffix = $this->config['defaultSuffix'];

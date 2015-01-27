@@ -38,6 +38,7 @@ class Amqp implements IAmqp
         $this->config = $config;
         $this->createAmqpConnection();
     }
+
     public function createChannel()
     {
         return new \AMQPChannel($this->amqpConnection);

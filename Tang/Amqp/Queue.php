@@ -56,57 +56,63 @@ class Queue
         $this->queue->declare();
         $this->queue->bind($exchannel->getName(),$config['routingKey']);
     }
+
+    /**
+     * 非阻塞获取消息
+     * 有消息会传递Message对象到 $callback
+     * $callback
+     * @param $callback
+     * @param bool $isAutoAck
+     * @throws IsNotCallableException
+     */
     public function get($callback,$isAutoAck = false)
     {
         if(!is_callable($callback))
         {
             throw new IsNotCallableException();
         }
-        $envelope = $this->queue->get($isAutoAck);
-        $callback($envelope,$this);
+        $envelope = $this->queue->get($isAutoAck ? AMQP_AUTOACK:AMQP_NOPARAM);
+        if($envelope)
+        {
+            $message = Message::create($envelope,$this);
+        }
+        $callback($message);
     }
+
+    /**
+     * 阻塞获取消息
+     * 有消息会传递Message对象到 $callback
+     * 当$callback返回false的时候，则会停止获取消息
+     * @param $callback
+     * @param bool $isAutoAck
+     * @throws IsNotCallableException
+     */
     public function consume($callback,$isAutoAck = false)
     {
         if(!is_callable($callback))
         {
             throw new IsNotCallableException();
         }
-        $this->queue->consume($callback,$isAutoAck);
+        $flags = $isAutoAck ? AMQP_AUTOACK:AMQP_NOPARAM;
+        $running = true;
+        $callback2 = function($envelope,$queue) use($callback,$running)
+        {
+            $message = Message::create($envelope,$this);
+            $result = $callback($message);
+            if($result === false)
+            {
+                $running = false;
+            }
+        };
+        while(true)
+        {
+            if($running)
+            {
+                break;
+            }
+            $this->queue->consume($callback2,$flags);
+        }
     }
-
-    /**
-     * 确认已处理消息，当$multiple为true的时候，发送
-     * @param $envelope
-     * @param bool $multiple
-     * @return mixed
-     */
-    public function ack($envelope,$multiple = false)
-    {
-        return $this->queue->ack($envelope->getDeliveryTag(),$multiple);
-    }
-
-    /**
-     * 拒绝消息 当$requeue为true的时候，则发送到下一个消费者。否则删除消息
-     * @param $envelope
-     * @param bool $requeue
-     * @return mixed
-     */
-    public function nack($envelope,$requeue = false)
-    {
-        return $this->queue->ack($envelope->getDeliveryTag(),$requeue);
-    }
-
-    /**
-     * 拒绝接受消息 $requeue为true的话则会将消息发送到下一个消费者。否则删除消息
-     * @param $envelope
-     * @param bool $requeue
-     * @return mixed
-     */
-    public function reject($envelope,$requeue = false)
-    {
-        return $this->queue->reject($envelope->getDeliveryTag(),$requeue);
-    }
-
     /**
      * 清除所有暂存在Queue里面的消息
      * @return mixed

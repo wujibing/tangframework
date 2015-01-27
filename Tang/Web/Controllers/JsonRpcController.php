@@ -14,20 +14,38 @@
 // +-----------------------------------------------------------------------------------
 namespace Tang\Web\Controllers;
 use Tang\ThirdParty\ThirdPartyService;
-
+ThirdPartyService::import('JsonRpc.jsonRPC2Server');
 /**
  * JsonRpc控制器
  * Class JsonRpcController
  * @package Tang\Web\Controllers
  */
-class JsonRpcController extends Controller
+class JsonRpcController extends WebController
 {
+    protected $rpc;
+    public function __construct()
+    {
+        $this->rpc = new \jsonRPCServer();
+        $this->rpc->registerClass($this);
+    }
     /**
      * @see Controller::invoke
      */
     protected function invoke($action)
     {
-        ThirdPartyService::import('JsonRpc.jsonRPCServer');
-        \jsonRPCServer::handle($this);
+        $this->registerClass();
+        $this->rpc->handle();
+    }
+
+    /**
+     * 提供给子类注册对象到rpc
+     */
+    protected function registerClass()
+    {
+    }
+    public function __call($method,$args)
+    {
+        $this->rpc->error('not found function '.$method);
+        $this->rpc->sendResponse();
     }
 }

@@ -33,6 +33,7 @@ class RequestService extends ServiceProvider
         $driver = php_sapi_name() == 'cli'?'cli':'web';
         $instance = static::initObject('request', '\Tang\Manager\IManager')->driver($driver);
         $router = RouterService::driver($driver);
+        $config = static::$config->replaceGet(ucfirst($driver).'Router.*',$router->getDefaultConfig());
         $router->setConfig(static::$config->get(ucfirst($driver).'Router.*'));
         $router->setRequest($instance);
         $responseManager = ResponseService::getService();

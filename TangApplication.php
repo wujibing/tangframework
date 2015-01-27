@@ -240,3 +240,16 @@ class ErrorException extends SystemException
         parent::__construct($message,null,$errorNo,$level,$errorFile,$errorLine);
     }
 }
+
+/**
+ * 扩展检查
+ * Class ExtensionCheck
+ * @package Tang
+ */
+class ExtensionCheck
+{
+    public static function check($extension)
+    {
+
+    }
+}

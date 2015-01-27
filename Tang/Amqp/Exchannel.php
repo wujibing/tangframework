@@ -32,12 +32,20 @@ class Exchannel
      * @var string
      */
     protected $name;
+    /**
+     * exchannel
+     * @var \AMQPExchange
+     */
     protected $exchannel;
     /**
      * 队列数组
      * @var array
      */
     protected $queques = [];
+    /**
+     * channel
+     * @var \AMQPChannel
+     */
     protected $channel;
     public function __construct(IAmqp $amqp,$name,$config)
     {
@@ -81,18 +89,43 @@ class Exchannel
         $this->exchannel->declare();
         $this->config = $config;
     }
+
+    /**
+     * 获取exchannel名称
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
+
+    /**
+     * 获取Channel
+     * @return \AMQPChannel
+     */
     public function getChannel()
     {
         return $this->channel;
     }
+
+    /**
+     * 发送消息
+     * @param $message
+     * @param string $routingkey
+     * @param bool $flags
+     * @return mixed
+     */
     public function publish($message,$routingkey='',$flags = false)
     {
         return $this->exchannel->publish($message,$routingkey,$flags);
     }
+
+    /**
+     * 根据名称获取队列
+     * @param $name
+     * @return Queue
+     * @throws SystemException
+     */
     public function getQueue($name)
     {
         if(!isset($this->queques[$name]))
@@ -101,10 +134,30 @@ class Exchannel
         }
         return $this->queques[$name];
     }
+
+    /**
+     * 判断$name队列是否存在
+     * @param $name
+     * @return bool
+     */
     public function existsQuery($name)
     {
         return isset($this->queques[$name]);
     }
+
+    /**
+     * 创建队列
+     * @param $name
+     * @param string $routingKey
+     * @param bool $durable
+     * @param bool $passive
+     * @param bool $autoDelete
+     * @param bool $internal
+     * @param bool $noWait
+     * @param array $arguments
+     * @return Queue
+     * @throws SystemException
+     */
     public function createQuery($name,$routingKey='',$durable=false,$passive=false,$autoDelete=false,$internal=false,$noWait=false,$arguments=[])
     {
         if($this->existsQuery($name))
@@ -113,6 +166,12 @@ class Exchannel
         }
         return $this->ceateQueryByArray($name,compact('routingKey','durable','passive','autoDelete','internal','noWait','arguments'));
     }
+
+    /**
+     * 从配置文件中创建队列
+     * @param $name
+     * @throws SystemException
+     */
     protected function createQueueByConfig($name)
     {
         if(!isset($this->config['queues'][$name]))
@@ -121,6 +180,13 @@ class Exchannel
         }
         $this->ceateQueryByArray($name,$this->config['queues'][$name]);
     }
+
+    /**
+     * 创建队列
+     * @param $name
+     * @param $config
+     * @return Queue
+     */
     protected function ceateQueryByArray($name,$config)
     {
         $this->queques[$name] = new Queue($this,$name,$config);

@@ -18,7 +18,8 @@ use Tang\Interfaces\ISetConfig;
 interface IAmqp
 {
     /**
-     * @return mixed
+     * 创建Channel
+     * @return \AMQPChannel
      */
     public function createChannel();
 
@@ -27,4 +28,25 @@ interface IAmqp
      * @return \Tang\Amqp\Exchannel
      */
     public function getExchannel($name);
+
+    /**
+     * 判断$name Exchannel是否存在
+     * @param $name
+     * @return true
+     */
+    public function existsExchannel($name);
+
+    /**
+     * @param $name
+     * @param string $type
+     * @param bool $durable
+     * @param bool $passive
+     * @param bool $autoDelete
+     * @param bool $internal
+     * @param bool $noWait
+     * @param array $arguments
+     * @throw SystemException 如果$name的exchannel存在
+     * @return \Tang\Amqp\Exchannel
+     */
+    public function creareExchannel($name,$type='direct',$durable = false,$passive = false,$autoDelete = false,$internal = false,$noWait = false,array $arguments=[]);
 }
