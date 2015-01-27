@@ -213,10 +213,10 @@ class Model implements JsonSerializable,ArrayAccess
 			$attributes[$key] = $validateAttributes[$key] = $id;
 		}
 		$this->attributes = $validateAttributes;
+        $this->exists = true;
 		$this->event->attach('endInsert',$this,$marking);
 		//处理DML约束
 		$this->dmlRelationHandler($attributes,'insert');
-		$this->exists = true;
 		return $this;
 	}
 
@@ -403,7 +403,7 @@ class Model implements JsonSerializable,ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return isset($this->attributes[$offset]) || isset($this->relationValues[$offset]);
+        return $this->getAttribute($offset);
     }
 
     /**
@@ -483,10 +483,10 @@ class Model implements JsonSerializable,ArrayAccess
 	 * @param array $attributes
 	 * @return Model
 	 */
-	public static function create(array $attributes)
+	public static function create(array $attributes,$marking='')
 	{
 		$model = new static();
-		$model->insert($attributes);
+		$model->insert($attributes,$marking);
 		return $model;
 	}
     /**

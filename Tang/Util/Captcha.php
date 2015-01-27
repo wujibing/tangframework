@@ -16,8 +16,8 @@ namespace Tang\Util;
 use Tang\GD\Color;
 use Tang\GD\Draws\Line;
 use Tang\GD\Draws\Text;
-use Tang\Gd\Effects\Thumb;
-use Tang\Gd\Effects\Wave;
+use Tang\GD\Effects\Thumb;
+use Tang\GD\Effects\Wave;
 use Tang\GD\Fills\Background;
 use Tang\GD\Fills\Gradient;
 use Tang\GD\Image;
@@ -68,7 +68,10 @@ class Captcha
     {
         $this->width = $this->getInt($width,100);
     }
-
+    public function setIsGradientBackground($bool)
+    {
+        $this->isGradientBackground = $bool;
+    }
     /**
      * 设置高度
      * @param int $height

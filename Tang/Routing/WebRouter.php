@@ -280,6 +280,7 @@ class WebRouter extends BaseRouter implements IRouter
             $url = $this->scripteName.'/'.(!$path ? implode($this->delimiter,$array):ltrim($path,'/'));
             if($isRewrite && !isset($rewriteRules['appendParameters']) && !$rewriteRules['appendParameters'])
             {
+                $url = $this->createSuffix($url,$suffix);
                 $parameters && $url .= '?'.http_build_query($parameters);
             } else
             {
@@ -295,34 +296,38 @@ class WebRouter extends BaseRouter implements IRouter
                     }
                     $url = substr($url,0,-(strlen($this->config['parametersDelimiter'])));
                 }
-            }
-            if(!$suffix)
-            {
-                $suffix = $this->config['defaultSuffix'];
-            }
-            if($suffix && substr($url,-1) != '/')
-            {
-                if(!is_bool($suffix))
-                {
-                    $url .= '.'.$suffix;
-                } else if($this->extension)
-                {
-                    $url  .=  '.'.$this->extension;
-                } else if($this->config['suffixs'])
-                {
-                    $suffix = $this->config['suffixs'];
-                    $index = strpos($suffix, '|');
-                    if($index)
-                    {
-                        $suffix = substr($suffix,0, $index);
-                    }
-                    $url  .=  '.'.ltrim($suffix,'.');
-                }
+                $url = $this->createSuffix($url,$suffix);
             }
         }
         return  ($this->request->isSsl() ? 'https://':'http://').$domain.$url;
     }
-
+    private function createSuffix($url,$suffix)
+    {
+        if(!$suffix)
+        {
+            $suffix = $this->config['defaultSuffix'];
+        }
+        if($suffix && substr($url,-1) != '/')
+        {
+            if(!is_bool($suffix))
+            {
+                $url .= '.'.$suffix;
+            } else if($this->extension)
+            {
+                $url  .=  '.'.$this->extension;
+            } else if($this->config['suffixs'])
+            {
+                $suffix = $this->config['suffixs'];
+                $index = strpos($suffix, '|');
+                if($index)
+                {
+                    $suffix = substr($suffix,0, $index);
+                }
+                $url  .=  '.'.ltrim($suffix,'.');
+            }
+        }
+        return $url;
+    }
     /**
      * 获取类型
      * @return string

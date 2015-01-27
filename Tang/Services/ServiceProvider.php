@@ -49,6 +49,7 @@ abstract class ServiceProvider
                 'ipLocation' => '\Tang\Web\Ip\Location\LocationManager',
                 'clientIp' => '\Tang\Web\Ip\ClientIp',
                 'queque' => '\Tang\Queue\Queues',
+                'amqp' => '\Tang\Amqp\Servers'
     );
 	/**
 	 * 

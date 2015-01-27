@@ -220,9 +220,12 @@ class Builder
      * @param mixed $index 索引
 	 * @return Array
 	 */
-	public function get($columns = array('*'),$index = '')
+	public function get($columns = array(),$index = '')
 	{
-		if (!$this->columns) $this->columns = $columns;
+        if($columns)
+        {
+            $this->columns = $columns;
+        }
 		return $this->connection->select($this->toSql(), $this->getBindings(),$index);
 	}
 

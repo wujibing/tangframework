@@ -46,7 +46,7 @@ class SessionManager extends CacheManager implements ISession
 	}
 	public function createDatabaseDriver()
 	{
-        return new Database(parent::createDatabaseDriver(),$this->config['expire']);
+        return $this->createCacheStore(parent::createDatabaseDriver());
 	}
 	public function createApcDriver()
 	{

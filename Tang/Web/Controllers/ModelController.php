@@ -218,15 +218,12 @@ class ModelController extends WebController
      */
     protected function getCodeUrl($code,array $url = array())
     {
-        if(!$url)
+        if(!$url || !isset($url[$code]))
         {
             return '';
-        } else if(isset($url[$code]))
-        {
-            return $url[$code];
         } else
         {
-            return reset($url);
+            return $url[$code];
         }
     }
 }

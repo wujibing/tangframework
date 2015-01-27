@@ -270,14 +270,27 @@ class Validate
 	{
 		return preg_match('/^(http:\/\/|https:\/\/)?((?:[A-Za-z0-9]+-[A-Za-z0-9]+|[A-Za-z0-9]+)\.)+([A-Za-z]+)[\/\?\:]?.*$/',$value) && static::stringLength($value,$minSize,$maxSize);
 	}
+
     /**
-     * 判断一个字符窜是否为email地址
+     * 判断一个字符窜是否为email地址 以及字符串的长度
      * @param $value
+     * @param $minSize 最小长度
+     * @param $maxSize 最大长度
      * @return boolean
      */
-    public static function isEmail($value)
+    public static function isEmail($value,$minSize,$maxSize)
     {
-        return preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $value);
+        return static::stringLength($value,$minSize,$maxSize) && preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $value);
+    }
+
+    /**
+     * 判断是否是一个alipay账号
+     * @param $id
+     * @return bool
+     */
+    public static function isAlipay($id,$minSize,$maxSize)
+    {
+        return static::isEmail($id,$minSize,$maxSize) || static::isMobile($id);
     }
 
     /**
@@ -287,7 +300,7 @@ class Validate
      */
     public static function isMobile($value)
     {
-        return preg_match('/^((\(\d{3}\))|(\d{3}\-))?13[0-9]\d{8}?$|15[0-9]|18[0-9]\d{8}?$/', $value);
+        return preg_match('/^13[0-9]{9}$|14[0-9]{9}|15[0-9]{9}$|18[0-9]{9}$/', $value);
     }
 
     /**

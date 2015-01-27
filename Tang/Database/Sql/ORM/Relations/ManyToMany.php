@@ -91,12 +91,12 @@ class ManyToMany extends Manys
         foreach($attributes as $key => $attribute)
         {
             //没有主键的 需要插入
-            if(!isset($attribute[$this->foreignKey]) || !$attribute[$this->foreignKey])
+            if(!isset($attribute[$this->relationForeignKey]) || !$attribute[$this->relationForeignKey])
             {
                 $insertAttributes[] = $attribute;
             } else
             {
-                $keys[] = $attribute[$this->foreignKey];
+                $keys[] = $attribute[$this->relationForeignKey];
                 $updateAttributes[] = $attribute;
             }
         }
@@ -109,7 +109,11 @@ class ManyToMany extends Manys
         }
         if($updateAttributes) foreach($updateAttributes as $attribute)
         {
-            $this->relatedModel->where($this->foreignKey,'=',$attribute[$this->foreignKey])->update($attribute);
+			unset($attribute[$this->relationForeignKey]);
+			if($attribute)
+			{
+				$this->relatedModel->where($this->foreignKey,'=',$attribute[$this->relationForeignKey])->update($attribute);
+			}
         }
         if($keys)
         {
@@ -152,9 +156,27 @@ class ManyToMany extends Manys
 	{
 		$dictionary = array();
 		$foreign = $this->localKey;
+		if(isset($this->config['index']) && $this->config['index'])
+		{
+			$index = $this->config['index'];
+			$func = function($result) use($index)
+			{
+				return $result->getAttribute($index);
+			};
+		} else if(isset($this->config['indexCallback']) && is_callable($this->config['indexCallback']))
+		{
+			$func = $this->config['indexCallback'];
+		}
+
 		foreach ($results as $result)
 		{
-			$dictionary[$result->getAttribute(ManyToMany::AS_NAME)][] = $result;
+			if(isset($func) && ($key = $func($result)))
+			{
+				$dictionary[$result->getAttribute(ManyToMany::AS_NAME)][$key] = $result;
+			} else{
+				$dictionary[$result->getAttribute(ManyToMany::AS_NAME)][] = $result;
+			}
+
 		}
 		return $dictionary;
 	}

@@ -12,7 +12,7 @@
 // +-----------------------------------------------------------------------------------
 // | Version: 1.0
 // +-----------------------------------------------------------------------------------
-namespace Tang\Gd\Effects;
+namespace Tang\GD\Effects;
 use Tang\GD\IDraw;
 use Tang\GD\Image;
 use Tang\GD\Resource as ImageResource;

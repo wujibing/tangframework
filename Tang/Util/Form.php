@@ -26,8 +26,6 @@ class Form
 {
     private static $isLoadCalendar = false;
     private static $isLoadEditor = false;
-    private static $calendarDirectory = '/public/javascript/my97/';
-    private static $editorDirectory = '/public/javascript/ueditor/';
     public static function createByArray(array $components,array $values = array())
     {
         foreach($components as $component)
@@ -101,7 +99,7 @@ class Form
 				$componentString = static::radio($component['name'],$component['value'],$component['options'],$component['javascript'],$component['class'],$component['style']);
 				break;
 			case 'checkbox':
-				$componentString = static::checkbox($component['name'],$component['value'],$component['options'],$component['javascript'],$component['class'],$component['style']);
+				$componentString = static::checkbox($component['name'],$component['value'],$component['options'],$component['javascript'],$component['class'],$component['style'],$component['valueCallback']);
 				break;
 			case 'file':
 				$componentString = static::file($component['name'],$component['id'],$component['value'],$component['javascript'],$component['class'],$component['style']);
@@ -125,6 +123,7 @@ class Form
 		} else
 		{
 			$moduleName = RequestService::getService()->getRouter()->getModuleValue();
+            $moduleName = lcfirst($moduleName);
 			if(!isset($formatArray[$moduleName]))
 			{
 				$format = reset($formatArray);
@@ -235,7 +234,7 @@ class Form
         !$id && $id = $name;
         if(!static::$isLoadCalendar)
         {
-            $string .= ' <script language="javascript" type="text/javascript" src="'.static::$calendarDirectory.'WdatePicker.js"></script>';
+            $string .= ' <script language="javascript" type="text/javascript" src="'.ConfigService::get('form.calendarDirectory').'/WdatePicker.js"></script>';
             static::$isLoadCalendar = true;
         }
         $javascript .= 'onFocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:\''.static::getDefault($dateFormat, 'yyyy-MM-dd HH:mm:ss').'\',autoPickDate:true})"';
@@ -300,20 +299,32 @@ class Form
      * @param string $style
      * @return string
      */
-    public static function checkbox($name,$values = array(),$options = array(),$javascript = '',$className = '',$style='')
+    public static function checkbox($name,$values = array(),$options = array(),$javascript = '',$className = '',$style='',$valueCallback = null)
     {
         if (!$options)
         {
             return '';
         }
         $string = $checked = '';
-        $hasValue = is_array($values) && $values;
+
         $style = static::createStyle($style);
         $className = static::getDefault($className,'tang-checkbox');
+        if($valueCallback && is_callable($valueCallback))
+        {
+
+        } else
+        {
+            $hasValue = is_array($values) && $values;
+
+            $valueCallback = function($values,$key) use($hasValue)
+            {
+                return $hasValue && in_array($key,$values);
+            };
+        }
         foreach ($options as $optionKey => $optionValue)
         {
-            $checked = $hasValue && in_array($optionKey,$values) ? 'checked="true"' : '';
-            $string .= '<input type="checkbox" name="' . $name . '" class="' .
+            $checked = $valueCallback($values,$optionKey) ? 'checked="true"' : '';
+            $string .= '<input type="checkbox" name="' . $name . '[]" class="' .
                 $className . '" value="' . $optionKey . '" ' . $javascript .$style. ' ' .
                 $checked . '>' . $optionValue . '&nbsp;&nbsp;';
         }
@@ -364,10 +375,11 @@ class Form
         $string = '';
         if(!static::$isLoadEditor)
         {
-            $string .= '<script type="text/javascript" charset="utf-8" src="'.static::$editorDirectory.'ueditor.config.js"></script>
-    					<script type="text/javascript" charset="utf-8" src="'.static::$editorDirectory.'ueditor.all.min.js"> </script>
-    					<script type="text/javascript" src="'.static::$editorDirectory.'lang/zh-cn/zh-cn.js"></script>
-		            	<link rel="stylesheet" type="text/css" href="'.static::$editorDirectory.'themes/default/css/ueditor.min.css"/>';
+            $editorDirectory = ConfigService::get('form.editorDirectory').'/';
+            $string .= '<script type="text/javascript" charset="utf-8" src="'.$editorDirectory.'ueditor.config.js"></script>
+    					<script type="text/javascript" charset="utf-8" src="'.$editorDirectory.'ueditor.all.min.js"> </script>
+    					<script type="text/javascript" src="'.$editorDirectory.'lang/zh-cn/zh-cn.js"></script>
+		            	<link rel="stylesheet" type="text/css" href="'.$editorDirectory.'themes/default/css/ueditor.min.css"/>';
             static::$isLoadEditor = true;
         }
         $string .= '<script type="text/plain" name="'.$name.'" id="'.$id.'" '.static::createStyle($style).'>' .htmlspecialchars_decode($value) . '</script>';
@@ -377,28 +389,6 @@ class Form
         return $string;
     }
 
-    /**
-     * 设置日历目录
-     * @param string $calendarPath
-     */
-    public static function setCalendarDirectory($calendarPath)
-    {
-        static::$calendarDirectory = static::checkIsDirectory($calendarPath);
-    }
-
-    /**
-     * 设置编辑器目录
-     * @param string $editorDirectory
-     */
-    public static function setEditorDirectory($editorDirectory)
-    {
-        static::$editorDirectory = static::checkIsDirectory($editorDirectory);
-    }
-    protected static function checkIsDirectory($directory)
-    {
-        $directory = rtrim($directory,'/');
-        return $directory.'/';
-    }
     protected static function getDefault($value,$default)
     {
         return $value ? $value : $default;

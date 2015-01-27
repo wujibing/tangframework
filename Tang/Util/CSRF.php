@@ -49,14 +49,15 @@ class CSRF
     }
     public function getInput()
     {
-        return '<input type="hidden" name="'.CSRF::NAME.'" value="'.$this->getValue().'">';
+        return '<input type="hidden" name="'.CSRF::NAME.'" k="'.$this->key.'" value="'.$this->getValue().'">';
     }
     public function validate()
     {
         if(!isset($_REQUEST[CSRF::NAME]) || !$_REQUEST[CSRF::NAME] || $_REQUEST[CSRF::NAME] != $this->getValue())
         {
+            $this->makeKey();
             $this->request->getResponse()->httpStatus(403);
-            throw new CSRFFaildException('The CSRF token could not be verified!');
+            throw new CSRFFaildException('The CSRF token could not be verified!'.$this->key);
         }
         return true;
     }
